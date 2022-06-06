@@ -2,7 +2,7 @@
 
 # BOOST
 boost_version: 1.79.0
-boost_url: "https://github.com/boostorg/boost.git"
+boost_repo_url: "https://github.com/boostorg/boost.git"
 boost_tmp: "/tmp/boost-{{boost_version}}"
 boost_build: "/tmp/boost-{{boost_version}}-build"
 boost_install_dir: "/opt/boost-{{boost_version}}"
