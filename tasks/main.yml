@@ -8,7 +8,7 @@
 - name: BOOST | get from git repository
   git: repo="{{ boost_repo_url }}"
        dest="{{ boost_tmp }}"
-       version="{{ version }}"
+       version="{{ boost_version }}"
   when: not boost_exists.stat.exists
   register: boost_downloaded
 
