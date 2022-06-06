@@ -1,0 +1,17 @@
+# file: ansible-role-boost/meta/main.yml
+
+galaxy_info:
+  author: ros
+  company: ros
+  description: Install boost
+  min_ansible_version: 0.1
+  license: MIT
+  platforms:
+  - name: Centos
+    versions:
+    - all
+  categories:
+  - system
+
+dependencies:
+  - {role: ANXS.build-essential, tags: build-essential }

@@ -1,0 +1,64 @@
+---
+
+- name: BOOST | check if install exists
+  stat:
+    path: "{{ boost_install_dir }}/bin/boost"
+  register: boost_exists
+
+- name: BOOST | Get BOOST sources
+  become: true
+  get_url: url={{boost_url}} dest={{boost_tmp}} timeout=180 force=no
+  when: not boost_exists.stat.exists
+  register: boost_downloaded
+
+- name: BOOST | Extract BOOST sources
+  become: true
+  unarchive: src={{boost_tmp}}
+             dest="/tmp"
+             creates={{boost_build}}
+             remote_src=yes
+  when: boost_downloaded.changed
+  register: boost_extract
+
+- name: BOOST | Bootstrap Boost
+  command: chdir={{ boost_build }} ./bootstrap.sh --prefix={{ boost_install_dir }}
+  when: boost_extract
+
+- name: BOOST | Make Boost
+  command: chdir={{ boost_build }} ./b2
+  when: boost_extract
+
+- name: BOOST | Insall Boost
+  sudo: yes
+  command: chdir={{ boost_build }} ./b2 install
+  when: boost_extract
+
+# - name: GCC | add path to /etc/profile.d/gcc_path.sh
+#   become: true
+#   action: template src=gcc_path.sh.j2
+#           dest="/etc/profile.d/gcc_path.sh"
+#           mode=0644
+#   when: gcc_install.changed
+
+# - name: GCC | cleanup build dir
+#   become: true
+#   file:
+#     path: "{{ gcc_build }}"
+#     state: absent
+#   when: gcc_install.changed
+
+# - name: GCC | cleanup build
+#   become: true
+#   file:
+#     path: "{{ gcc_build_dir }}"
+#     state: absent
+#   when: gcc_install.changed
+
+# - name: GCC | cleanup tmp
+#   become: true
+#   file:
+#     path: "{{ gcc_tmp }}"
+#     state: absent
+#   when: gcc_install.changed
+
+...
