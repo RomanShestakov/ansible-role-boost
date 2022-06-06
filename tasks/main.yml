@@ -12,22 +12,17 @@
   when: not boost_exists.stat.exists
   register: boost_downloaded
 
-- name: BOOST | Make boost build folder
-  become: true
-  file: path="{{ boost_build }}" state=directory
-  when: boost_downloaded.changed
-
 - name: BOOST | Bootstrap Boost
-  command: chdir={{ boost_build }} ./bootstrap.sh --prefix={{ boost_install_dir }}
+  command: chdir={{ boost_tmp }} ./bootstrap.sh --prefix={{ boost_install_dir }}
   when: boost_downloaded.changed
 
 - name: BOOST | Make Boost
-  command: chdir={{ boost_build }} ./b2
+  command: chdir={{ boost_tmp }} ./b2
   when: boost_downloaded.changed
 
 - name: BOOST | Insall Boost
   become: yes
-  command: chdir={{ boost_build }} ./b2 install
+  command: chdir={{ boost_tmp }} ./b2 install
   when: boost_downloaded.changed
 
 # - name: GCC | add path to /etc/profile.d/gcc_path.sh
