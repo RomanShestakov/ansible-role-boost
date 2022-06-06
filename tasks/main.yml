@@ -29,7 +29,7 @@
   when: boost_extract
 
 - name: BOOST | Insall Boost
-  sudo: yes
+  become: yes
   command: chdir={{ boost_build }} ./b2 install
   when: boost_extract
 
