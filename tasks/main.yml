@@ -1,24 +1,21 @@
 ---
 
-- name: BOOST | check if install exists
+- name: BOOST | check if boost is already installed
   stat:
     path: "{{ boost_install_dir }}/bin/boost"
   register: boost_exists
 
-- name: BOOST | Get BOOST sources
-  become: true
-  get_url: url={{boost_url}} dest={{boost_tmp}} timeout=180 force=no
+- name: BOOST | get from git repository
+  git: repo="{{ boost_repo_url }}"
+       dest="{{ boost_tmp }}"
+       version="{{ version }}"
   when: not boost_exists.stat.exists
   register: boost_downloaded
 
-- name: BOOST | Extract BOOST sources
+- name: BOOST | Make boost build folder
   become: true
-  unarchive: src={{boost_tmp}}
-             dest="/tmp"
-             creates={{boost_build}}
-             remote_src=yes
+  file: path="{{ boost_build }}" state=directory
   when: boost_downloaded.changed
-  register: boost_extract
 
 - name: BOOST | Bootstrap Boost
   command: chdir={{ boost_build }} ./bootstrap.sh --prefix={{ boost_install_dir }}
