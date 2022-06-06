@@ -19,16 +19,16 @@
 
 - name: BOOST | Bootstrap Boost
   command: chdir={{ boost_build }} ./bootstrap.sh --prefix={{ boost_install_dir }}
-  when: boost_extract
+  when: boost_downloaded.changed
 
 - name: BOOST | Make Boost
   command: chdir={{ boost_build }} ./b2
-  when: boost_extract
+  when: boost_downloaded.changed
 
 - name: BOOST | Insall Boost
   become: yes
   command: chdir={{ boost_build }} ./b2 install
-  when: boost_extract
+  when: boost_downloaded.changed
 
 # - name: GCC | add path to /etc/profile.d/gcc_path.sh
 #   become: true
