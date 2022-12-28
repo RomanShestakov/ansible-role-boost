@@ -25,13 +25,6 @@
   command: chdir={{ boost_tmp }} ./b2 install
   when: boost_downloaded.changed
 
-- name: BOOST | cleanup build dir
-  become: true
-  file:
-    path: "{{ boost_build_dir }}"
-    state: absent
-  when: boost_downloaded.changed
-
 - name: BOOST | cleanup tmp dir
   become: true
   file:
