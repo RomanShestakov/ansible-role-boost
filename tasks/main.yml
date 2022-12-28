@@ -2,7 +2,7 @@
 
 - name: BOOST | check if boost is already installed
   stat:
-    path: "{{ boost_install_dir }}/bin/boost"
+    path: "{{ boost_install_dir }}/include/boost"
   register: boost_exists
 
 - name: BOOST | get from git repository
