@@ -5,10 +5,24 @@
     path: "{{ boost_install_dir }}/include/boost"
   register: boost_exists
 
-- name: BOOST | get from git repository
-  git: repo="{{ boost_repo_url }}"
-       dest="{{ boost_tmp }}"
-       version="boost-{{ boost_version }}"
+# - name: BOOST | get from git repository
+#   git: repo="{{ boost_repo_url }}"
+#        dest="{{ boost_tmp }}"
+#        version="boost-{{ boost_version }}"
+#   when: not boost_exists.stat.exists
+#   register: boost_downloaded
+
+- name: BOOST | get from ftp
+  ansible.builtin.get_url:
+    url: "{{ boost_repo_url }}/boost_{{ boost_version | replace('.', '_') }}.tar.gz"
+    dest: "{{ boost_tmp }}/boost.tar.gz"
+  when: not boost_exists.stat.exists
+  register: boost_downloaded
+
+- name: BOOST | untar
+  ansible.builtin.unarchive:
+    src: "{{ boost_tmp }}/boost.tar.gz"
+    dest: "{{ boost_tmp }}"
   when: not boost_exists.stat.exists
   register: boost_downloaded
 
